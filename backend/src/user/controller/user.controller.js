@@ -4,6 +4,7 @@
 import { sendPasswordResetEmail } from "../../../utils/emails/passwordReset.js";
 import { sendWelcomeEmail } from "../../../utils/emails/welcomeMail.js";
 import { ErrorHandler } from "../../../utils/errorHandler.js";
+import { sentMail } from "../../../utils/mailModule.js";
 import { sendToken } from "../../../utils/sendToken.js";
 import {
   createNewUserRepo,
@@ -11,6 +12,7 @@ import {
   findUserForPasswordResetRepo,
   findUserRepo,
   getAllUsersRepo,
+  getUserFromEmail,
   updateUserProfileRepo,
   updateUserRoleAndProfileRepo,
 } from "../models/user.repository.js";
@@ -64,10 +66,22 @@ export const logoutUser = async (req, res, next) => {
 
 export const forgetPassword = async (req, res, next) => {
   // Implement feature for forget password
+  try {
+    let user =  await getUserFromEmail(req.body.email);
+    if(!user){
+      throw new ErrorHandler(400,'Email Id Not Exist');
+    }
+    //
+    sentMail(email,'Password reset','');
+  } catch (error) {
+    
+  }
 };
 
 export const resetUserPassword = async (req, res, next) => {
   // Implement feature for reset password
+  
+
 };
 
 export const getUserDetails = async (req, res, next) => {

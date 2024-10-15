@@ -1,9 +1,16 @@
 import UserModel from "./user.schema.js";
 import mongoose from "mongoose";
 import { ObjectId } from "mongoose";
+import { ErrorHandler } from "../../../utils/errorHandler.js";
 
 export const createNewUserRepo = async (user) => {
-  return await new UserModel(user).save();
+  
+    let userExistModel = await UserModel.findOne({email:user.email});
+    if(userExistModel){
+      throw new ErrorHandler(401,"Email Id Already Exist");
+    }
+    return await new UserModel(user).save(); 
+
 };
 
 export const findUserRepo = async (factor, withPassword = false) => {
@@ -29,6 +36,10 @@ export const updateUserProfileRepo = async (_id, data) => {
 export const getAllUsersRepo = async () => {
   return UserModel.find({});
 };
+
+export const getUserFromEmail =async (email) =>{
+ return await  UserModel.findOne({email:email});
+}
 
 export const deleteUserRepo = async (_id) => {
   return await UserModel.findByIdAndDelete(_id);

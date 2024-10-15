@@ -12,17 +12,23 @@ export const auth = async (req, res, next) => {
   next();
 };
 
+// ["admin"]
+// ["user"]
 export const authByUserRole = (...roles) => {
   // fix this middleware for admin access only
   return async (req, res, next) => {
-    if (roles.includes(req.user.role !== "admin")) {
-      return next(
+    if(roles.length > 1){
+      //
+    }
+   if((roles.includes("admin") && req.user.role == "admin")|| (roles.includes("user"))){
+      next();
+   } else{
+        return next(
         new ErrorHandler(
           403,
           `Role: ${req.user.role} is not allowed to access this resource`
         )
       );
-    }
-    next();
-  };
+   }
+ };
 };
